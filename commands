@@ -1,0 +1,4 @@
+# Commands to run the cfn scripts from command line
+
+aws cloudformation create-stack --stack-name sharedinfrastructure --template-body file://./cfn-sharedinfra.yaml
+

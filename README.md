@@ -1,2 +1,2 @@
-# aws-project-3
-Create a webserver in a new VPC and automated testing. Give the ability to have mutiple versions running at the same time
+# project2
+AWS CFN scripts for the 2nd project on the ACloudGuru Advanced CFN course
