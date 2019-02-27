@@ -46,7 +46,7 @@ response2=client.describe_stacks(StackName=VPCStack)
 print(response2['Stacks'][0]['Outputs'])
 for dict in response2['Stacks'][0]['Outputs']:
 	if dict['OutputKey'] == 'appbucketurl':
-		appbucketurl = dict['OutputValue']
+		appbucketurl = dict['OutputValue']                                        
 		#print(dict['OutputValue'])
 
 
@@ -70,6 +70,7 @@ s3.put_object(Bucket=s3lambdabucket,Key='autosubnet.zip',Body=content)
 
 
 ## create the autosubnet stack
+## The stack creates a DynamoDB table and a Lambda function based on the zip file in s3lambdabucket
 subnet_file = open('cfn-autosubnet.yaml')
 subnet_template = subnet_file.read()
 subnet_response = client.create_stack(StackName=AutoSubnetStack,TemplateBody=subnet_template,Capabilities=['CAPABILITY_NAMED_IAM'])
@@ -82,14 +83,9 @@ except:
 print('AutoSubnet stack created successfully')
 
 # create the application stack
-app_file = open('cfn-app3.yaml')
+app_file = open('cfn-app4.yaml')
 app_template = app_file.read()
-app_response = client.create_stack(StackName=AppStack,TemplateBody=app_template,Parameters=[{'ParameterKey':'APPVERSION','ParameterValue':app_version},\
-                                        {'ParameterKey':'APPPrivateCIDRA','ParameterValue':app_private_cidr_a},\
-                                        {'ParameterKey':'APPPrivateCIDRB','ParameterValue':app_private_cidr_b},\
-                                        {'ParameterKey':'APPPublicCIDRA','ParameterValue':app_public_cidr_a},\
-                                        {'ParameterKey':'APPPublicCIDRB','ParameterValue':app_public_cidr_b}\
-					])
+app_response = client.create_stack(StackName=AppStack,TemplateBody=app_template,Parameters=[{'ParameterKey':'APPVERSION','ParameterValue':app_version}])
 app_waiter = client.get_waiter('stack_create_complete')
 try:
 	app_waiter.wait(StackName = app_response['StackId'])
